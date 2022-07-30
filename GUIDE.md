@@ -6,7 +6,7 @@ It is just a way of following the official documentations while applying the wor
 ### Installation
 It is possible to install [Synapse as a Python module](https://matrix-org.github.io/synapse/latest/setup/installation.html#installing-as-a-python-module-from-pypi) from PyPI (which is what were are going to do).  
 First install the platform-specific prerequisites
-```
+```shell
 $ pkg install build-essential binutils python rust libffi sqlite openssl  libjpeg-turbo
 $ pip install virtualenv
 ```
@@ -14,11 +14,11 @@ One of the dependencies of the `matrix-synapse` python module is the [cryptograp
 The build target can be specified via the `CARGO_BUILD_TARGET` environment variable.  
 You can use the command `rustc --print target-list | grep android` to see the target list that you can choose from based on your architecture (ps: You can check your architecture via the command `uname -m`)
 Here we will use armv7 architecture as an example.
-```
+```shell
 $ export CARGO_BUILD_TARGET=armv7-linux-androideabi
 ```
 Now we can carry on with the rest of the official installation instructions. Here we will have the synapse folder under `$PREFIX/opt`
-```sh
+```shell
 $ mkdir -p $PREFIX/opt/synapse
 $ cd $PREFIX/opt/synapse
 $ virtualenv -p python3 env
@@ -29,7 +29,7 @@ $ pip install matrix-synapse
 ```
 
 Then it's now time to generate a configuration file. In the same directory (and while the virtual environment is activated). Execute the following:
-```sh
+```shell
 $ python -m synapse.app.homeserver \
     --server-name my.domain.name \
     --config-path homeserver.yaml \
@@ -40,7 +40,7 @@ Replace `my.domain.name` with your domain name, and choose weather you'd like to
 
 One last step I prefer to add (you can ignore this if you like and use what's provided in the official docs) is to have synctl binary that does what synctl should do in the virtualenv.
 add a file in your `$PREFIX/bin/` (or anywhere in your path) called `synctl` and add the following to it:
-```
+```bash
 #!/data/data/com.termux/files/usr/bin/bash
 
 cd $PREFIX/opt/synapse
@@ -63,7 +63,7 @@ As for the needed configuration (what you need to change in order for it to work
 ### Installation
 #### Nginx
 Nginx is available via the pkg package manager. You might want to install termux-services to ensure it'll stay running and managed by `runit`
-```
+```shell
 $ pkg install -y nginx termux-services
 ```
 > and then restart termux so that the service-daemon is started.
@@ -79,17 +79,17 @@ Also, note that this installation ignores the `angueas` dependency for `certbot`
 It is possible to compile augeas on android, but you will need to add `#define __USE_FORTIFY_LEVEL 0` in `gnulib/lib/cdefs.h` to disable FORTIFY since it works differently on android. Check [augeas#760](https://github.com/hercules-team/augeas/issues/760).  
 
 To install certbot, first setup the virtual environment.
-```
+```shell
 $ python -m venv $PREFIX/opt/certbot
 $ $PREFIX/opt/certbot/bin/pip install --upgrade pip
 ```
 Then install certbot in the virtual environemnt by running this command.
-```
+```shell
 $ $PREFIX/opt/certbot/bin/pip install certbot certbot-nginx
 ```
 Execute the following instruction on the command line on the machine to ensure that the certbot command can be run.
-```
-ln -s $PREFIX/opt/certbot/bin/certbot $PREFIX/bin/certbot
+```shell
+$ ln -s $PREFIX/opt/certbot/bin/certbot $PREFIX/bin/certbot
 ```
 And you are done with the installation.
 ### Configuration
@@ -98,16 +98,16 @@ First, the nginx default configuration contains a couple of entries that might i
 You can copy my configs or make your own from scratch if you'd like. My advice is to copy mine first to get your certificate and then make the changes as you no longer have to be afraid if it'll work or not.  
 
 After backing up your default/old configs, Copy the [configuration](/nginx.conf) provided hereto your `$PREFIX/etc/nginx`
-```
+```shell
 $ cp $PREFIX/etc/nginx/nginx.conf $PREFIX/etc/nginx/nginx.conf.orig
 $ curl "https://raw.githubusercontent.com/medanisjbara/synapse-termux/main/nginx.conf" -O $PREFIX/etc/nginx/nginx.conf
 ```
 Next, create the sites-available and sites-enabled directories.
-```
+```shell
 $ mkdir $PREFIX/etc/nginx/sites-available $PREFIX/etc/nginx/sites-enabled
 ```
 Add the following to `$PREFIX/etc/nginx/sites-available`
-```
+```conf
 server {
         server_name your.domain.name;
 
@@ -125,9 +125,9 @@ server {
 ```
 **NOTE:** Ofc whenever you change nginx configs. You should test the configuration by executing `nginx -t`. If all goes well, you can continue to the next step. Otherwise fix the errors that might occure.
 AND WE ARE READY TO ENABLE THE NGINX MATRIX SITE.
-```
-ln -s $PREFIX/etc/nginx/sites-availabe/matrix $PREFIX/etc/nginx/sites-enabled
-sv up nginx
+```shell
+$ ln -s $PREFIX/etc/nginx/sites-availabe/matrix $PREFIX/etc/nginx/sites-enabled
+$ sv up nginx
 ```
 Now nginx is running, you can check if it still is using `sv status nginx`. To enable it, use `sv-enable nginx`. Read more about managing services in termux on [their wiki](https://wiki.termux.com/wiki/Termux-services).  
 If for whatever reason something didn't work. You can check the log for errors by executing the following command.
@@ -135,13 +135,13 @@ If for whatever reason something didn't work. You can check the log for errors b
 $ tail -f $PREFIX/var/log/nginx/errors.log
 ```
 If everything went okay until this point. You should check your router and forward your ports to the internet. Here you'll need to forward port 8080 to port 80 , and port 8443 to port 443. You can then execute the certbot command.
-```
-certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 -v --nginx -d your.domain.name
+```shell
+$ certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 -v --nginx -d your.domain.name
 ```
 Hopefully, if everything went okay and there are no errors. (I doubt it at this point, but you can open an issue here if you'd like). Then it's time to edit `$PREFIX/ect/nginx/sites-available/matrix` again, just replace 443 with 8443.  
 **NOTE:**
 In some cases `certbot` doesn't add the needed changes to that file. In that case you'll have to edit it manually. If that's the case. Here's how the final file should look like.
-```
+```conf
 server {
         server_name your.domain.name;
 
@@ -172,13 +172,8 @@ server {
     return 404; # managed by Certbot
 }
 ```
-And everything should be set by now. You can check if your server is running by entering you domain name in [federation tester website](https://federationtester.matrix.org/)
-
-
-
-
-*to be continued*
-
+And everything should be set by now. Make sure synapse is running by executing `synctl start`.
+You can check if your server is running correctly by entering you domain name in [federation tester website](https://federationtester.matrix.org/).
 
 ## Finally
 This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though non of them is considering termux) and try to improvise.
