@@ -3,6 +3,7 @@ This guide will show you how to setup synapse to host your matrix server on term
 It is just a way of following the official documentations while applying the workarounds that has to be done in termux to survive the harsh Android environment.
 
 ## matrix-synapse
+### Installation
 It is possible to install [Synapse as a Python module](https://matrix-org.github.io/synapse/latest/setup/installation.html#installing-as-a-python-module-from-pypi) from PyPI (which is what were are going to do).  
 First install the platform-specific prerequisites
 ```
@@ -48,6 +49,15 @@ source ./env/bin/activate
 ```
 Don't forget to make it executable by running the command `chmod +x $PREFIX/bin/synctl`
 **NOTE:** It is generally not recommended to add executables to your `$PREFIX/bin`. If you want to do this right, you might want to consider using `$HOME/.local/bin` and adding it to your path.
+
+### Configuration
+At this point you can just execute `synctl start` and the server will work (only on your phone) to check it, open a browser and head to `localhost:8008`. On it's own, this will not work though. Additional changes has to be made.  
+
+You can open the file `homeserver.yaml` in the synapse directory under `$PREFIX/opt`. The `homeserver.yaml` is very documented and there are a lot of options you can add to it. Here we'll stick to the defaults and change only what's necessary, but feel free to experiment with it.  
+
+As for the needed configuration (what you need to change in order for it to work).
+
+*to be continued*
 
 ## Finally
 This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though non of them is considering termux) and try to improvise.
