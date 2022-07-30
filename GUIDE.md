@@ -136,6 +136,7 @@ If for whatever reason something didn't work. You can check the log for errors b
 $ tail -f $PREFIX/var/log/nginx/errors.log
 ```
 If everything went okay until this point. You should check your router and forward your ports to the internet. Here you'll need to forward port 8080 to port 80 , and port 8443 to port 443. You can then execute the certbot command.
+#### Certbot
 ```shell
 $ certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 -v --nginx -d your.domain.name
 ```
