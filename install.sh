@@ -42,8 +42,6 @@ cd $PREFIX/opt/synapse
 	--report-stats=no
 
 
-sed 's/8008/8448/g' homeserver.yaml -i
-sed 's/127.0.0.1/0.0.0.0/g' homeserver.yaml -i
 echo 'suppress_key_server_warning: true' >> homeserver.yaml
 echo 'serve_server_wellknown: true' >> homeserver.yaml
 
