@@ -2,8 +2,6 @@
 
 set -e
 
-
-augeas_version="1.12.0"
 domain_name="$1"
 
 # Check for arguments
@@ -12,6 +10,7 @@ if [ -z "$domain_name" ]; then
 	exit 1
 fi
 
+if ! test -f $PREFIX/var/service-restart; then
 #################### Synapse ####################
 #
 # Update and dependencies installation.
@@ -56,6 +55,62 @@ EOF
 
 chmod +x $PREFIX/bin/synctl
 
-echo "Currently, this is only a matrix-synapse installation. You'll have to rely on guides to setup nginx"
-echo "synctl --help for more information on how to use synapse"
+
+################# nginx-certbot #################
+################# *Installation  #################
+pkg install -y nginx termux-services
+python -m venv $PREFIX/opt/certbot
+pip="$PREFIX/opt/certbot/bin/pip"
+$pip install --upgrade pip
+$pip install certbot certbot-nginx
+if ! test -f $PREFIX/bin/certbot ; then
+	ln -s $PREFIX/opt/certbot/bin/certbot $PREFIX/bin/certbot
+fi
+cp $PREFIX/etc/nginx/nginx.conf $PREFIX/etc/nginx/nginx.conf.orig
+curl https://raw.githubusercontent.com/medanisjbara/synapse-termux/main/nginx.conf > $PREFIX/etc/nginx/nginx.conf
+mkdir -p $PREFIX/etc/nginx/sites-available $PREFIX/etc/nginx/sites-enabled
+
+cat << EOF > $PREFIX/etc/nginx/sites-available/matrix
+server {
+        server_name $domain_name;
+
+        location / {
+                proxy_pass http://localhost:8008;
+        }
+
+	location ~* ^(\/_matrix|\/_synapse\/client) {
+                proxy_pass http://localhost:8008;
+                proxy_set_header X-Forwarded-For $remote_addr;
+                client_max_body_size 50M ;
+        }
+
+}
+EOF
+
+if ! test -L "$PREFIX/etc/nginx/sites-enabled/matrix" ; then
+	ln -s $PREFIX/etc/nginx/sites-availabe/matrix $PREFIX/etc/nginx/sites-enabled
+fi
+sv-enable nginx || echo -n "Exist the app by typing `exit` and restart the script again" && touch $PREFIX/var/service-restart && exit
+fi
+test -f $PREFIX/var/service-restart && sv-enable nginx && rm $PREFIX/var/service-restart
+sv up nginx
+
+size=$(stty -a </dev/pts/0 | grep -Po '(?<=columns )\d+')
+
+echo printf -- '-%.0s' {1..$size} | bash
+echo "Preparations have been made correctly. To be able to get the ssl_certificate please forward the port 8080 on LAN to port 80 on WAN, And While you're at it, consider forwarding port 8443 on LAN to port 443 on WAN since you will need it later."
+echo "You can find this in your router settings"
+echo "After doing so, press enter to continue."
+read
+certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 -v --nginx -d $domain_name
+
+if grep -q ssl_certificate $PREFIX/etc/nginx/sites-available/matrix ; then
+	echo "Seems like certbot worked but didn't change your config file. Please visit the following link"
+	echo "https://github.com/medanisjbara/synapse-termux/blob/main/GUIDE.md#certbot-didnt-setup-the-config"
+fi
+
+synctl start
+
+echo
+echo "Installation completed without errors. Your matrix server is running."
 echo "Happy Chatting !!"
