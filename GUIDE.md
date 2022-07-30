@@ -108,7 +108,7 @@ Next, create the sites-available and sites-enabled directories.
 $ mkdir $PREFIX/etc/nginx/sites-available $PREFIX/etc/nginx/sites-enabled
 ```
 Add the following to `$PREFIX/etc/nginx/sites-available`
-```conf
+```nginx
 server {
         server_name your.domain.name;
 
@@ -142,7 +142,7 @@ $ certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/lets
 Hopefully, if everything went okay and there are no errors. (I doubt it at this point, but you can open an issue here if you'd like). Then it's time to edit `$PREFIX/ect/nginx/sites-available/matrix` again, just replace 443 with 8443.  
 **NOTE:**
 In some cases `certbot` doesn't add the needed changes to that file. In that case you'll have to edit it manually. If that's the case. Here's how the final file should look like.
-```conf
+```nginx
 server {
         server_name your.domain.name;
 
