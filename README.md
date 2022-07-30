@@ -17,14 +17,14 @@ The guide does exactly the same as the script does, But with some explination to
 **If you intend to really use this as your matrix server Please consider the following**
 * This is completely experimental. I can't be held responsible for any data loss to your precisous messages (all the programs being used do not have warrenty as well so. You're on your own mate).
 * Consider disabling every app that you're not using (You can use `adb` to disable even google apps and any other, just make sure to enable them if you ever had to reboot your phone) This will help you obtain more resources for your server.
-```
+```shell
 # To disable google apps for example
 for app in $(adb shell pm list packages | cut -d: -f2 | grep google); do
 	adb shell pm disable-user --user 0 "$app"
 done
 ```
 To re-enable everything.
-```
+```shell
 for app in $(adb shell pm list packages -d); do
 	adb shell pm enable --user 0 "$app"
 done
