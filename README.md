@@ -33,6 +33,6 @@ Please note that even if you disable everything (don't do it, it's dangerous), t
 * If your phone has a broken screen and you're doing this to repurpose it, or you're following the guide and want to do this from your computer. You can use tools like `scrcpy` to start sshd from termux (it is recommended to enable it as a service using `termux-services` since you're gonna `ssh` into your server often.)
 
 ## Progress
-- [ ] Installation and configuration of matrix-synapse
-- [ ] Installation and configuration of nginx
-- [ ] Installation and configuration of certbot
+- [X] Installation and configuration of matrix-synapse
+- [X] Installation and configuration of nginx
+- [X] Installation and configuration of certbot

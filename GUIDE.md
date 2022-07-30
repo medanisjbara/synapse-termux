@@ -57,7 +57,128 @@ You can open the file `homeserver.yaml` in the synapse directory under `$PREFIX/
 
 As for the needed configuration (what you need to change in order for it to work).
 
+* Add `serve_server_wellknown: true` to the end of the file.
+
+## Nginx And Certbot
+### Installation
+#### Nginx
+Nginx is available via the pkg package manager. You might want to install termux-services to ensure it'll stay running and managed by `runit`
+```
+$ pkg install -y nginx termux-services
+```
+> and then restart termux so that the service-daemon is started.
+For more read [their wiki](https://wiki.termux.com/wiki/Termux-services).
+#### Certbot
+cetbot is [available via PyPI](https://certbot.eff.org/instructions?ws=nginx&os=pip), But it's support is partial.  
+They also mentioned this.  
+> If you are on a more obscure or heavily customized system, these instructions may not work and the Certbot team may be unable to help you resolve the problem.
+
+So please if this doesn't work for you, do not bother them with the problem. Instead post it here and we might be able to work something out.  
+
+Also, note that this installation ignores the `angueas` dependency for `certbot` as it is not necesairy to have in order to optain the certificate. To read more about this, check the [Installer development](https://eff-certbot.readthedocs.io/en/stable/contributing.html?highlight=augeas#installer-development) section in certbot documentation.  
+It is possible to compile augeas on android, but you will need to add `#define __USE_FORTIFY_LEVEL 0` in `gnulib/lib/cdefs.h` to disable FORTIFY since it works differently on android. Check [augeas#760](https://github.com/hercules-team/augeas/issues/760).  
+
+To install certbot, first setup the virtual environment.
+```
+$ python -m venv $PREFIX/opt/certbot
+$ $PREFIX/opt/certbot/bin/pip install --upgrade pip
+```
+Then install certbot in the virtual environemnt by running this command.
+```
+$ $PREFIX/opt/certbot/bin/pip install certbot certbot-nginx
+```
+Execute the following instruction on the command line on the machine to ensure that the certbot command can be run.
+```
+ln -s $PREFIX/opt/certbot/bin/certbot $PREFIX/bin/certbot
+```
+And you are done with the installation.
+### Configuration
+#### nginx
+First, the nginx default configuration contains a couple of entries that might interfere with what we need. If do the rest of the steps using the default configuration. You will most likely bump into a lot of issues such as the fact that the config overwrites the `server_name` causing certbot to misbehave. One can try to run the commands needed to setup everything and fix the problems one at a time. But certbot has a [failed validation limit](https://letsencrypt.org/docs/failed-validation-limit/) of 5 attempts per host name per hour. This means that you can only fail at using this command 5 times per hour.  
+You can copy my configs or make your own from scratch if you'd like. My advice is to copy mine first to get your certificate and then make the changes as you no longer have to be afraid if it'll work or not.  
+
+After backing up your default/old configs, Copy the [configuration](/nginx.conf) provided hereto your `$PREFIX/etc/nginx`
+```
+$ cp $PREFIX/etc/nginx/nginx.conf $PREFIX/etc/nginx/nginx.conf.orig
+$ curl "https://raw.githubusercontent.com/medanisjbara/synapse-termux/main/nginx.conf" -O $PREFIX/etc/nginx/nginx.conf
+```
+Next, create the sites-available and sites-enabled directories.
+```
+$ mkdir $PREFIX/etc/nginx/sites-available $PREFIX/etc/nginx/sites-enabled
+```
+Add the following to `$PREFIX/etc/nginx/sites-available`
+```
+server {
+        server_name your.domain.name;
+
+        location / {
+                proxy_pass http://localhost:8008;
+        }
+
+	location ~* ^(\/_matrix|\/_synapse\/client) {
+                proxy_pass http://localhost:8008;
+                proxy_set_header X-Forwarded-For $remote_addr;
+                client_max_body_size 50M ;
+        }
+
+}
+```
+**NOTE:** Ofc whenever you change nginx configs. You should test the configuration by executing `nginx -t`. If all goes well, you can continue to the next step. Otherwise fix the errors that might occure.
+AND WE ARE READY TO ENABLE THE NGINX MATRIX SITE.
+```
+ln -s $PREFIX/etc/nginx/sites-availabe/matrix $PREFIX/etc/nginx/sites-enabled
+sv up nginx
+```
+Now nginx is running, you can check if it still is using `sv status nginx`. To enable it, use `sv-enable nginx`. Read more about managing services in termux on [their wiki](https://wiki.termux.com/wiki/Termux-services).  
+If for whatever reason something didn't work. You can check the log for errors by executing the following command.
+```
+$ tail -f $PREFIX/var/log/nginx/errors.log
+```
+If everything went okay until this point. You should check your router and forward your ports to the internet. Here you'll need to forward port 8080 to port 80 , and port 8443 to port 443. You can then execute the certbot command.
+```
+certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 -v --nginx -d your.domain.name
+```
+Hopefully, if everything went okay and there are no errors. (I doubt it at this point, but you can open an issue here if you'd like). Then it's time to edit `$PREFIX/ect/nginx/sites-available/matrix` again, just replace 443 with 8443.  
+**NOTE:**
+In some cases `certbot` doesn't add the needed changes to that file. In that case you'll have to edit it manually. If that's the case. Here's how the final file should look like.
+```
+server {
+        server_name your.domain.name;
+
+        location / {
+                proxy_pass http://localhost:8008;
+        }
+        location ~* ^(\/_matrix|\/_synapse\/client) {
+                proxy_pass http://localhost:8008;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header X-Forwarded-For $remote_addr;
+                client_max_body_size 50M;
+        }
+
+    listen 8443 ssl; # managed by Certbot
+    ssl_certificate /data/data/com.termux/files/usr/etc/letsencrypt/live/your.domain.name/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /data/data/com.termux/files/usr/etc/letsencrypt/live/your.domain.name/privkey.pem; # managed by Certbot
+    include /data/data/com.termux/files/usr/etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /data/data/com.termux/files/usr/etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+server {
+    if ($host = your.domain.name) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+        server_name your.domain.name;
+    listen 8080;
+    return 404; # managed by Certbot
+}
+```
+And everything should be set by now. You can check if your server is running by entering you domain name in [federation tester website](https://federationtester.matrix.org/)
+
+
+
+
 *to be continued*
+
 
 ## Finally
 This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though non of them is considering termux) and try to improvise.
