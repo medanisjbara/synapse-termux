@@ -32,3 +32,7 @@ done
 Please note that even if you disable everything (don't do it, it's dangerous), this won't be enough for you to enter rooms with a big number of people as self hosting synapse requires a lot of computer power which a phone simply cannot provide. This is just to help a bit.
 * If your phone has a broken screen and you're doing this to repurpose it, or you're following the guide and want to do this from your computer. You can use tools like `scrcpy` to start sshd from termux (it is recommended to enable it as a service using `termux-services` since you're gonna `ssh` into your server often.)
 
+## Progress
+- [ ] Installation and configuration of matrix-synapse
+- [ ] Installation and configuration of nginx
+- [ ] Installation and configuration of certbot
