@@ -66,7 +66,8 @@ Nginx is available via the pkg package manager. You might want to install termux
 ```shell
 $ pkg install -y nginx termux-services
 ```
-> and then restart termux so that the service-daemon is started.
+> and then restart termux so that the service-daemon is started.  
+
 For more read [their wiki](https://wiki.termux.com/wiki/Termux-services).
 #### Certbot
 cetbot is [available via PyPI](https://certbot.eff.org/instructions?ws=nginx&os=pip), But it's support is partial.  
