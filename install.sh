@@ -34,12 +34,12 @@ $pip install --upgrade setuptools
 $pip install matrix-synapse
 
 # Configuring synapse
-cd $PREFIX/opt/synapse && \ 
-	python -m synapse.app.homeserver \
-		--server-name "$domain_name" \
-		--config-path homeserver.yaml \
-		--generate-config \
-		--report-status=no
+cd $PREFIX/opt/synapse
+./env/bin/python -m synapse.app.homeserver \
+	--server-name "$domain_name" \
+	--config-path homeserver.yaml \
+	--generate-config \
+	--report-stats=no
 
 
 sed 's/8008/8448/g' homeserver.yaml -i
