@@ -12,7 +12,7 @@ You can choose to follow along the [GUIDE.md](/GUIDE.md), or to just curl the sc
 Well, this is an experiment, being done for educational purposes. But when you need it again, it's borring to have to follow a guide. The guide is for the DIY people who are interested in this. And even those people might need the script as the process of copy pasting might not be interesting.
 
 ## Some advices that aren't mentioned in the guide!
-The guide does exactly the same as the script does, But with some explination to why everything is the way it is. Both the script and the guide were just an improvised way of copying the instruction from the official sources and trying to bend them to the rough android environment (same as everything else under termux).
+The guide does exactly the same as the script does, But with some explination to why everything is the way it is. Both the script and the guide were just an improvised way of copying the instruction from the official sources and trying to bend them to the rough android environment (same as everything else under termux).  
 **If you intend to really use this as your matrix server Please consider the following**
 * This is completely experimental. I can't be held responsible for any data loss to your precisous messages (all the programs being used do not have warrenty as well so. You're on your own mate).
 * Consider disabling every app that you're not using (You can use `adb` to disable even google apps and any other, just make sure to enable them if you ever had to reboot your phone) This will help you obtain more resources for your server.
