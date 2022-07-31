@@ -4,10 +4,14 @@ set -e
 
 domain_name="$1"
 
+lines(){
+	eval "printf -- '-%.0s' {1..$size}"
+}
+
 # Check for arguments
 if [ -z "$domain_name" ]; then
-	echo "specify your dimain as an argument to the script."
-	exit 1
+	echo -n "specify your domain name: "
+	read -rp domain_name
 fi
 
 if ! test -f "$PREFIX/var/service-restart"; then
@@ -90,18 +94,18 @@ EOF
 if ! test -L "$PREFIX/etc/nginx/sites-enabled/matrix" ; then
 	ln -s "$PREFIX/etc/nginx/sites-availabe/matrix" "$PREFIX/etc/nginx/sites-enabled"
 fi
-sv-enable nginx || echo -n "Exist the app by typing 'exit' and restart the script again" && touch "$PREFIX/var/service-restart" && exit
+sv-enable nginx || lines && echo -e "Exist the app by typing 'exit' and restart the script again\nhttps://wiki.termux.com/wiki/Termux-services" && lines && touch "$PREFIX/var/service-restart" && exit
 fi
 test -f "$PREFIX/var/service-restart" && sv-enable nginx && rm "$PREFIX/var/service-restart"
 sv up nginx
 
 size="$(stty -a </dev/pts/0 | grep -Po '(?<=columns )\d+')"
 
-eval "printf -- '-%.0s' {1..$size}" 
+lines
 echo "Preparations have been made correctly. To be able to get the ssl_certificate please forward the port 8080 on LAN to port 80 on WAN, And While you're at it, consider forwarding port 8443 on LAN to port 443 on WAN since you will need it later."
 echo "You can find this in your router settings"
-echo "After doing so, press enter to continue."
-read -r
+echo -n "After doing so, press enter to continue."
+read -r; lines
 certbot --work-dir "$PREFIX/var/lib/letsencrypt" --logs-dir "$PREFIX/var/log/letsencrypt" --config-dir "$PREFIX/etc/letsencrypt" --nginx-server-root "$PREFIX/etc/nginx" --http-01-port 8080 --https-port 8443 -v --nginx -d "$domain_name"
 
 if grep -q ssl_certificate "$PREFIX/etc/nginx/sites-available/matrix" ; then
