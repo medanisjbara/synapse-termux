@@ -3,6 +3,7 @@
 set -e
 
 domain_name="$1"
+size="$(stty -a </dev/pts/0 | grep -Po '(?<=columns )\d+')"
 
 lines(){
 	eval "printf -- '-%.0s' {1..$size}"
@@ -101,8 +102,6 @@ sv-enable nginx || lines && echo -e "Exist the app by typing 'exit' and restart 
 fi
 test -f "$PREFIX/var/service-restart" && sv-enable nginx && rm "$PREFIX/var/service-restart"
 sv up nginx
-
-size="$(stty -a </dev/pts/0 | grep -Po '(?<=columns )\d+')"
 
 lines
 echo "Preparations have been made correctly. To be able to get the ssl_certificate please forward the port 8080 on LAN to port 80 on WAN, And While you're at it, consider forwarding port 8443 on LAN to port 443 on WAN since you will need it later."
