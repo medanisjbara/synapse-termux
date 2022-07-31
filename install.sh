@@ -97,8 +97,22 @@ if ! test -L "$PREFIX/etc/nginx/sites-enabled/matrix" ; then
 fi
 lines
 echo "Running nginx test"
-nginx -t && echo "Test passed" || lines && echo "Test didn't pass, please solve this error and/report the issue to https://github.com/medanisjbara/synapse-termux" && exit
-sv-enable nginx || lines && echo -e "Exist the app by typing 'exit' and restart the script again\nhttps://wiki.termux.com/wiki/Termux-services" && lines && touch "$PREFIX/var/service-restart" && exit
+
+if nginx -t ; then
+	echo "Test passed"
+else
+	lines
+	echo "Test didn't pass, please solve this error and/report the issue to https://github.com/medanisjbara/synapse-termux"
+	exit
+fi
+
+if ! sv-enable nginx ; then
+	lines
+	echo -e "Exist the app by typing 'exit' and restart the script again\nhttps://wiki.termux.com/wiki/Termux-services"
+	lines
+	touch "$PREFIX/var/service-restart"
+	exit
+fi
 fi
 test -f "$PREFIX/var/service-restart" && sv-enable nginx && rm "$PREFIX/var/service-restart"
 sv up nginx
