@@ -127,7 +127,7 @@ server {
 **NOTE:** Ofc whenever you change nginx configs. You should test the configuration by executing `nginx -t`. If all goes well, you can continue to the next step. Otherwise, fix the errors that might occur.
 AND WE ARE READY TO ENABLE THE NGINX MATRIX SITE.
 ```shell
-$ ln -s $PREFIX/etc/nginx/sites-availabe/matrix $PREFIX/etc/nginx/sites-enabled
+$ ln -s $PREFIX/etc/nginx/sites-available/matrix $PREFIX/etc/nginx/sites-enabled
 $ sv up nginx
 ```
 Now nginx is running, you can check if it still is using `sv status nginx`. To enable it, use `sv-enable nginx`. Read more about managing services in termux on [their wiki](https://wiki.termux.com/wiki/Termux-services).  
