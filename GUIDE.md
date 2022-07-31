@@ -5,7 +5,7 @@ It is just a way of following the official documentations while applying the wor
 ## matrix-synapse
 ### Installation
 It is possible to install [Synapse as a Python module](https://matrix-org.github.io/synapse/latest/setup/installation.html#installing-as-a-python-module-from-pypi) from PyPI (which is what were are going to do).  
-First install the platform-specific prerequisites
+First install the platform-specific prerequisites.
 ```shell
 $ pkg install build-essential binutils python rust libffi sqlite openssl  libjpeg-turbo
 $ pip install virtualenv
@@ -28,7 +28,7 @@ $ pip install --upgrade setuptools
 $ pip install matrix-synapse
 ```
 
-Then it's now time to generate a configuration file. In the same directory (and while the virtual environment is activated). Execute the following:
+It's now time to generate a configuration file. In the same directory (and while the virtual environment is activated). Execute the following:
 ```shell
 $ python -m synapse.app.homeserver \
     --server-name my.domain.name \
@@ -36,10 +36,10 @@ $ python -m synapse.app.homeserver \
     --generate-config \
     --report-stats=<yes/now>
 ```
-Replace `my.domain.name` with your domain name, and choose weather you'd like to report usage statictics to the developers using the flag `--report-stats=` [read more about this in the official synaps docs](https://matrix-org.github.io/synapse/latest/setup/installation.html#installing-as-a-python-module-from-pypi)
+Replace `my.domain.name` with your domain name, and choose whether you'd like to report usage statistics to the developers using the flag `--report-stats=` [read more about this in the official synaps docs](https://matrix-org.github.io/synapse/latest/setup/installation.html#installing-as-a-python-module-from-pypi)
 
 One last step I prefer to add (you can ignore this if you like and use what's provided in the official docs) is to have synctl binary that does what synctl should do in the virtualenv.
-add a file in your `$PREFIX/bin/` (or anywhere in your path) called `synctl` and add the following to it:
+Add a file in your `$PREFIX/bin/` (or anywhere in your path) called `synctl` and add the following to it:
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
 
@@ -51,7 +51,7 @@ Don't forget to make it executable by running the command `chmod +x $PREFIX/bin/
 **NOTE:** It is generally not recommended to add executables to your `$PREFIX/bin`. If you want to do this right, you might want to consider using `$HOME/.local/bin` and adding it to your path.
 
 ### Configuration
-At this point you can just execute `synctl start` and the server will work (only on your phone) to check it, open a browser and head to `localhost:8008`. On it's own, this will not work though. Additional changes has to be made.  
+At this point you can just execute `synctl start` and the server will work (only on your phone) to check it, open a browser and head to `localhost:8008`. On its own, this will not work though. Additional changes have to be made.  
 
 You can open the file `homeserver.yaml` in the synapse directory under `$PREFIX/opt`. The `homeserver.yaml` is very documented and there are a lot of options you can add to it. Here we'll stick to the defaults and change only what's necessary, but feel free to experiment with it.  
 
@@ -70,21 +70,21 @@ $ pkg install -y nginx termux-services
 
 For more read [their wiki](https://wiki.termux.com/wiki/Termux-services).
 #### Certbot
-cetbot is [available via PyPI](https://certbot.eff.org/instructions?ws=nginx&os=pip), But it's support is partial.  
+cetbot is [available via PyPI](https://certbot.eff.org/instructions?ws=nginx&os=pip), But its support is partial.  
 They also mentioned this.  
 > If you are on a more obscure or heavily customized system, these instructions may not work and the Certbot team may be unable to help you resolve the problem.
 
-So please if this doesn't work for you, do not bother them with the problem. Instead post it here and we might be able to work something out.  
+So please if this doesn't work for you, do not bother them with the problem. Instead, post it here, and we might be able to work something out.  
 
-Also, note that this installation ignores the `angueas` dependency for `certbot` as it is not necesairy to have in order to optain the certificate. To read more about this, check the [Installer development](https://eff-certbot.readthedocs.io/en/stable/contributing.html?highlight=augeas#installer-development) section in certbot documentation.  
+Also, note that this installation ignores the `angueas` dependency for `certbot` as it is not necessary to have in order to obtain the certificate. To read more about this, check the [Installer development](https://eff-certbot.readthedocs.io/en/stable/contributing.html?highlight=augeas#installer-development) section in certbot documentation.  
 It is possible to compile augeas on android, but you will need to add `#define __USE_FORTIFY_LEVEL 0` in `gnulib/lib/cdefs.h` to disable FORTIFY since it works differently on android. Check [augeas#760](https://github.com/hercules-team/augeas/issues/760).  
 
-To install certbot, first setup the virtual environment.
+To install certbot, first set up the virtual environment.
 ```shell
 $ python -m venv $PREFIX/opt/certbot
 $ $PREFIX/opt/certbot/bin/pip install --upgrade pip
 ```
-Then install certbot in the virtual environemnt by running this command.
+Then install certbot in the virtual environment by running this command.
 ```shell
 $ $PREFIX/opt/certbot/bin/pip install certbot certbot-nginx
 ```
@@ -95,7 +95,7 @@ $ ln -s $PREFIX/opt/certbot/bin/certbot $PREFIX/bin/certbot
 And you are done with the installation.
 ### Configuration
 #### nginx
-First, the nginx default configuration contains a couple of entries that might interfere with what we need. If do the rest of the steps using the default configuration. You will most likely bump into a lot of issues such as the fact that the config overwrites the `server_name` causing certbot to misbehave. One can try to run the commands needed to setup everything and fix the problems one at a time. But certbot has a [failed validation limit](https://letsencrypt.org/docs/failed-validation-limit/) of 5 attempts per host name per hour. This means that you can only fail at using this command 5 times per hour.  
+First, the nginx default configuration contains a couple of entries that might interfere with what we need. If you do the rest of the steps using the default configuration. You will most likely bump into a lot of issues such as the fact that the config overwrites the `server_name` causing certbot to misbehave. One can try to run the commands needed to set up everything and fix the problems one at a time. But certbot has a [failed validation limit](https://letsencrypt.org/docs/failed-validation-limit/) of 5 attempts per host name per hour. This means that you can only fail at using this command 5 times per hour.  
 You can copy my configs or make your own from scratch if you'd like. My advice is to copy mine first to get your certificate and then make the changes as you no longer have to be afraid if it'll work or not.  
 
 After backing up your default/old configs, Copy the [configuration](/nginx.conf) provided hereto your `$PREFIX/etc/nginx`
@@ -124,7 +124,7 @@ server {
 
 }
 ```
-**NOTE:** Ofc whenever you change nginx configs. You should test the configuration by executing `nginx -t`. If all goes well, you can continue to the next step. Otherwise fix the errors that might occure.
+**NOTE:** Ofc whenever you change nginx configs. You should test the configuration by executing `nginx -t`. If all goes well, you can continue to the next step. Otherwise, fix the errors that might occur.
 AND WE ARE READY TO ENABLE THE NGINX MATRIX SITE.
 ```shell
 $ ln -s $PREFIX/etc/nginx/sites-availabe/matrix $PREFIX/etc/nginx/sites-enabled
@@ -175,7 +175,7 @@ server {
 }
 ```
 And everything should be set by now. Make sure synapse is running by executing `synctl start`.
-You can check if your server is running correctly by entering you domain name in [federation tester website](https://federationtester.matrix.org/).
+You can check if your server is running correctly by entering your domain name in [federation tester website](https://federationtester.matrix.org/).
 
 ## Finally
-This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though non of them is considering termux) and try to improvise.
+This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though none of them is considering termux) and try to improvise.
