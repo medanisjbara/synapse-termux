@@ -94,6 +94,9 @@ EOF
 if ! test -L "$PREFIX/etc/nginx/sites-enabled/matrix" ; then
 	ln -s "$PREFIX/etc/nginx/sites-availabe/matrix" "$PREFIX/etc/nginx/sites-enabled"
 fi
+lines
+echo "Running nginx test"
+nginx -t && echo "Test passed" || echo "Test didn't pass, please solve this error and/report the issue to https://github.com/medanisjbara/synapse-termux" && exit
 sv-enable nginx || lines && echo -e "Exist the app by typing 'exit' and restart the script again\nhttps://wiki.termux.com/wiki/Termux-services" && lines && touch "$PREFIX/var/service-restart" && exit
 fi
 test -f "$PREFIX/var/service-restart" && sv-enable nginx && rm "$PREFIX/var/service-restart"
