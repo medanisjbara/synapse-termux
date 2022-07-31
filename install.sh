@@ -97,7 +97,7 @@ sv up nginx
 
 size="$(stty -a </dev/pts/0 | grep -Po '(?<=columns )\d+')"
 
-echo printf -- '-%.0s' {1..$size} | bash
+eval "printf -- '-%.0s' {1..$size}" 
 echo "Preparations have been made correctly. To be able to get the ssl_certificate please forward the port 8080 on LAN to port 80 on WAN, And While you're at it, consider forwarding port 8443 on LAN to port 443 on WAN since you will need it later."
 echo "You can find this in your router settings"
 echo "After doing so, press enter to continue."
