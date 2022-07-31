@@ -12,7 +12,7 @@ lines(){
 # Check for arguments
 if [ -z "$domain_name" ]; then
 	echo -n "specify your domain name: "
-	read -rp domain_name
+	read -r domain_name
 fi
 
 if ! test -f "$PREFIX/var/service-restart"; then
