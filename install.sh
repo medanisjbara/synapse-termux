@@ -18,8 +18,9 @@ if [ -z "$domain_name" ]; then
 	echo "would you like to use certbot's staging environment ?"
 	echo "https://letsencrypt.org/docs/staging-environment/"
 	read -rp "Use certbot stagin ? N/y: " staging
-	if [[ $(echo $staging | tr 'A-Z' 'a-z') = y* ]] ; then
+	if [[ $(echo "$staging" | tr '[:upper:]' '[:lower:]') = y* ]] ; then
 		stage_flag="--test-cert"
+	fi
 fi
 
 if ! test -f "$PREFIX/var/service-restart"; then
