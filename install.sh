@@ -137,7 +137,7 @@ echo "Preparations have been made correctly. To be able to get the ssl_certifica
 echo "You can find this in your router settings"
 echo -n "After doing so, press enter to continue."
 read -r; lines
-certbot --work-dir "$PREFIX/var/lib/letsencrypt" --logs-dir "$PREFIX/var/log/letsencrypt" --config-dir "$PREFIX/etc/letsencrypt" --nginx-server-root "$PREFIX/etc/nginx" --http-01-port 8080 --https-port 8443 "$stage_flag" -v --nginx -d "$domain_name"
+eval "certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 $stage_flag -v --nginx -d $domain_name"
 
 if grep -q ssl_certificate "$PREFIX/etc/nginx/sites-available/matrix" ; then
 	echo "Seems like certbot worked but didn't change your config file. Please visit the following link"
