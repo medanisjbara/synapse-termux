@@ -144,6 +144,9 @@ if grep -q ssl_certificate "$PREFIX/etc/nginx/sites-available/matrix" ; then
 	echo "https://github.com/medanisjbara/synapse-termux/blob/main/GUIDE.md#certbot-didnt-setup-the-config"
 fi
 
+sed 's/ 80;/ 8080;/g' "$PREFIX/etc/nginx/sites-available/matrix" -i
+sed 's/ 443;/ 8443;/g' "$PREFIX/etc/nginx/sites-available/matrix" -i
+
 synctl start
 
 echo
