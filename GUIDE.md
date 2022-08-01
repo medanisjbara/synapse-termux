@@ -44,10 +44,7 @@ One last step I prefer to add (you can ignore this if you like and use what's pr
 Add a file in your `$PREFIX/bin/` (or anywhere in your path) called `synctl` and add the following to it:
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
-
-cd $PREFIX/opt/synapse
-source ./env/bin/activate
-./env/bin/synctl "$@"
+ python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG`
 ```
 Don't forget to make it executable by running the command `chmod +x $PREFIX/bin/synctl`
 **NOTE:** It is generally not recommended to add executables to your `$PREFIX/bin`. If you want to do this right, you might want to consider using `$HOME/.local/bin` and adding it to your path.
@@ -178,12 +175,6 @@ server {
 ```
 And everything should be set by now. Make sure synapse is running by executing `synctl start`.
 You can check if your server is running correctly by entering your domain name in [federation tester website](https://federationtester.matrix.org/).
-
-## Run synapse 
-
-U can run synapse by running this command:
-
-`$ python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG`
 
 ## Finally
 This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though none of them is considering termux) and try to improvise.
