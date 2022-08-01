@@ -183,7 +183,7 @@ You can check if your server is running correctly by entering your domain name i
 
 u can run synapse by runninh this :
 
-`python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG`
+`$ python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG`
 
 ## Finally
 This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though none of them is considering termux) and try to improvise.
