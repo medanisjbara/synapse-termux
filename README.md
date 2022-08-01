@@ -39,4 +39,5 @@ Please note, even if you disable all apps on your phone (don't do it, it's dange
 - [X] Automating the installation and configuration of matrix-synapse
 - [X] Automating the installation and configuration of nginx
 - [X] Automating the installation and configuration of certbot
+- [ ] Add `Usage` after installation is complete in GUIDE.md
 - [ ] Add `Usage` for the script in README
