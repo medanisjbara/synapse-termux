@@ -50,7 +50,7 @@ Don't forget to make it executable by running the command `chmod +x $PREFIX/bin/
 **NOTE:** It is generally not recommended to add executables to your `$PREFIX/bin`. If you want to do this right, you might want to consider using `$HOME/.local/bin` and adding it to your path.
 
 ### Configuration
-At this point you can just execute `synctl start` and the server will work (only on your phone) to check it, open a browser and head to `localhost:8008`. On its own, this will not work though. Additional changes have to be made.  
+At this point you can just execute `synctl` and the server will work (only on your phone) to check it, open a browser and head to `localhost:8008`. On its own, this will not work though. Additional changes have to be made.  
 
 You can open the file `homeserver.yaml` in the synapse directory under `$PREFIX/opt`. The `homeserver.yaml` is very documented and there are a lot of options you can add to it. Here we'll stick to the defaults and change only what's necessary, but feel free to experiment with it.  
 
