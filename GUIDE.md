@@ -44,7 +44,7 @@ One last step I prefer to add (you can ignore this if you like and use what's pr
 Add a file in your `$PREFIX/bin/` (or anywhere in your path) called `synctl` and add the following to it:
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
- python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG`
+ python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG
 ```
 Don't forget to make it executable by running the command `chmod +x $PREFIX/bin/synctl`
 **NOTE:** It is generally not recommended to add executables to your `$PREFIX/bin`. If you want to do this right, you might want to consider using `$HOME/.local/bin` and adding it to your path.
