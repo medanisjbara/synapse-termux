@@ -11,13 +11,15 @@ lines(){
 
 # Check for arguments
 if [ -z "$domain_name" ]; then
-	read -rp "specify your domain name: " domain_name
+	echo "specify your domain name: "
+	read -r domain_name
 	if test -z "$domain_name" ; then 
 		exit
 	fi
 	echo "would you like to use certbot's staging environment ?"
 	echo "https://letsencrypt.org/docs/staging-environment/"
-	read -rp "Use certbot stagin ? N/y: " staging
+	echo "Use certbot stagin ? N/y: " 
+	read -r staging
 	if [[ $(echo "$staging" | tr '[:upper:]' '[:lower:]') = y* ]] ; then
 		stage_flag="--test-cert"
 	fi
