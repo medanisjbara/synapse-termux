@@ -30,6 +30,8 @@ $ pip install matrix-synapse
 
 It's now time to generate a configuration file. In the same directory (and while the virtual environment is activated). Execute the following:
 ```shell
+
+$ cd PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG
 $ python -m synapse.app.homeserver \
     --server-name my.domain.name \
     --config-path homeserver.yaml \
@@ -176,6 +178,12 @@ server {
 ```
 And everything should be set by now. Make sure synapse is running by executing `synctl start`.
 You can check if your server is running correctly by entering your domain name in [federation tester website](https://federationtester.matrix.org/).
+
+## Run synapse 
+
+u can run synapse by runninh this :
+
+`python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG`
 
 ## Finally
 This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though none of them is considering termux) and try to improvise.
