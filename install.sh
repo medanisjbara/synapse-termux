@@ -3,6 +3,7 @@
 set -e
 
 domain_name="$1"
+staging="$2"
 size="$(stty -a </dev/pts/0 | grep -Po '(?<=columns )\d+')"
 
 lines(){
@@ -14,13 +15,17 @@ if [ -z "$domain_name" ]; then
 	echo "specify your domain name: "
 	read -r domain_name
 	if test -z "$domain_name" ; then 
+		echo "No domain name specified"
 		exit
 	fi
 	echo "would you like to use certbot's staging environment ?"
 	echo "https://letsencrypt.org/docs/staging-environment/"
 	echo "Use certbot stagin ? N/y: " 
-	read -r staging
+	if test -z "$staging" ; then
+		read -r staging
+	fi
 	if [[ $(echo "$staging" | tr '[:upper:]' '[:lower:]') = y* ]] ; then
+		echo "Using staging"
 		stage_flag="--test-cert"
 	fi
 fi
