@@ -181,7 +181,7 @@ You can check if your server is running correctly by entering your domain name i
 
 ## Run synapse 
 
-u can run synapse by runninh this :
+U can run synapse by running this command:
 
 `$ python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG`
 
