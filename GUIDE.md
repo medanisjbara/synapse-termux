@@ -2,6 +2,8 @@
 This guide will show you how to setup synapse to host your matrix server on termux.
 It is just a way of following the official documentations while applying the workarounds that has to be done in termux to survive the harsh Android environment.
 
+**Note:** Setting up [delegation](https://matrix-org.github.io/synapse/latest/delegate.html) is possible. But it goes beyond the scope of this guide. The official documentation should be more than enough to get you covered on that.
+
 ## matrix-synapse
 ### Installation
 It is possible to install [Synapse as a Python module](https://matrix-org.github.io/synapse/latest/setup/installation.html#installing-as-a-python-module-from-pypi) from PyPI (which is what were are going to do).  
