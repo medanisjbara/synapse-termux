@@ -25,7 +25,7 @@ done
 ```
 To re-enable everything.
 ```shell
-for app in $(adb shell pm list packages -d); do
+for app in $(adb shell pm list packages -d | cut -d: -f2); do
 	adb shell pm enable --user 0 "$app"
 done
 ```
