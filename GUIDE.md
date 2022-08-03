@@ -33,12 +33,12 @@ $ pip install matrix-synapse
 It's now time to generate a configuration file. In the same directory (and while the virtual environment is activated). Execute the following:
 ```shell
 $ python -m synapse.app.homeserver \
-    --server-name my.domain.name \
+    --server-name your.domain.name \
     --config-path homeserver.yaml \
     --generate-config \
     --report-stats=<yes/now>
 ```
-Replace `my.domain.name` with your domain name, and choose whether you'd like to report usage statistics to the developers using the flag `--report-stats=` [read more about this in the official synaps docs](https://matrix-org.github.io/synapse/latest/setup/installation.html#installing-as-a-python-module-from-pypi)
+Replace `your.domain.name` with your domain name, and choose whether you'd like to report usage statistics to the developers using the flag `--report-stats=` [read more about this in the official synaps docs](https://matrix-org.github.io/synapse/latest/setup/installation.html#installing-as-a-python-module-from-pypi)
 
 One last step I prefer to add (you can ignore this if you like and use what's provided in the official docs) is to have synctl binary that does what synctl should do in the virtualenv.
 Add a file in your `$PREFIX/bin/` (or anywhere in your path) called `synctl` and add the following to it:
