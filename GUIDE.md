@@ -32,6 +32,8 @@ $ pip install matrix-synapse
 
 It's now time to generate a configuration file. In the same directory (and while the virtual environment is activated). Execute the following:
 ```shell
+
+$ cd PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG
 $ python -m synapse.app.homeserver \
     --server-name my.domain.name \
     --config-path homeserver.yaml \
@@ -44,16 +46,13 @@ One last step I prefer to add (you can ignore this if you like and use what's pr
 Add a file in your `$PREFIX/bin/` (or anywhere in your path) called `synctl` and add the following to it:
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
-
-cd $PREFIX/opt/synapse
-source ./env/bin/activate
-./env/bin/synctl "$@"
+ python -m synapse.app.homeserver --config-path=PATH TO THE PLACE THAT U WANT TO SAVE THE CONFIG
 ```
 Don't forget to make it executable by running the command `chmod +x $PREFIX/bin/synctl`
 **NOTE:** It is generally not recommended to add executables to your `$PREFIX/bin`. If you want to do this right, you might want to consider using `$HOME/.local/bin` and adding it to your path.
 
 ### Configuration
-At this point you can just execute `synctl start` and the server will work (only on your phone) to check it, open a browser and head to `localhost:8008`. On its own, this will not work though. Additional changes have to be made.  
+At this point you can just execute `synctl` and the server will work (only on your phone) to check it, open a browser and head to `localhost:8008`. On its own, this will not work though. Additional changes have to be made.  
 
 You can open the file `homeserver.yaml` in the synapse directory under `$PREFIX/opt`. The `homeserver.yaml` is very documented and there are a lot of options you can add to it. Here we'll stick to the defaults and change only what's necessary, but feel free to experiment with it.  
 
