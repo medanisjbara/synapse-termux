@@ -179,5 +179,30 @@ server {
 And everything should be set by now. Make sure synapse is running by executing `synctl start`.
 You can check if your server is running correctly by entering your domain name in [federation tester website](https://federationtester.matrix.org/).
 
-## Finally
-This guide is incomplete. Over the next few days. I will continue adding the rest of the steps to have a complete synapse matrix server running on your phone. Until that time, you are somewhat on your own. Consider the guides online (their numbers are huge even though none of them is considering termux) and try to improvise.
+## Usage
+### Adding a user
+After setting up your server. You can execute `register_new_matrix_user` under the synapse virtual environment to create your user.
+```shell
+$ cd $PREFIX/opt/synapse
+$ source env/bin/activate
+$ register_new_matrix_user -c homeserver.yaml http://localhost:8008
+```
+### Connecting to the server
+You can choose any matrix client from https://matrix.org/clients , if you are willing to use the server from the same network used for hosting, continue with the steps below.
+#### Linux
+If you are willing to use this on (linux) your computer under the same network, you can add `localhost  your.domain.name` to `/etc/hosts` to be able to use your domain locally. Then, you can forward the needed ports using ether `adb` or `ssh` as shown in their appropriate sections below.  
+This is to ensure that the computer sees you.domain.name the same way anyone from the outside does.
+Make sure there are no other programs listening on those ports before forwarning them.
+##### Using adb
+```shell
+$ adb forward tcp:80 tcp:8080
+$ adb forward tcp:443 tcp:8443
+```
+##### Using ssh
+```shell
+$ ssh <the-phone-ip> -p 8022 -NL 80:localhost:8080
+$ ssh <the-phone-ip> -p 8022 -NL 443:localhost:8443
+```
+Note that both of these are foreground processes.
+#### Others (and linux)
+For other operating systems. You will have to setup a local DNS, this goes beyond the scope of this guide but you can find plenty of documentation online about this.
