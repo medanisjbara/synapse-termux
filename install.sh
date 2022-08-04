@@ -30,7 +30,6 @@ if [ -z "$domain_name" ]; then
 	fi
 fi
 
-if ! test -f "$PREFIX/var/service-restart"; then
 #################### Synapse ####################
 #
 # Update and dependencies installation.
@@ -121,22 +120,18 @@ else
 	exit
 fi
 
-if ! sv-enable nginx ; then
-	lines
-	echo -e "Exist the app by typing 'exit' and restart the script again\nhttps://wiki.termux.com/wiki/Termux-services"
-	lines
-	touch "$PREFIX/var/service-restart"
-	exit
-fi
-fi
-test -f "$PREFIX/var/service-restart" && sv-enable nginx && rm "$PREFIX/var/service-restart"
+# Sourcing services daemon
+source $PREFIX/etc/profile.d/start-services.sh
+
 sv up nginx
 
 lines
 echo "Preparations have been made correctly. To be able to get the ssl_certificate please forward the port 8080 on LAN to port 80 on WAN, And While you're at it, consider forwarding port 8443 on LAN to port 443 on WAN since you will need it later."
 echo "You can find this in your router settings"
 echo -n "After doing so, press enter to continue."
-read -r; lines
+lines
+sleep 3
+read -r
 certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 $stage_flag -v --nginx -d $domain_name
 
 if grep -q ssl_certificate "$PREFIX/etc/nginx/sites-available/matrix" ; then
