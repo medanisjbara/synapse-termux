@@ -13,16 +13,16 @@ lines(){
 # Check for arguments
 if [ -z "$domain_name" ]; then
 	echo "specify your domain name: "
-	read -r domain_name
+	read -r domain_name <&1
 	if test -z "$domain_name" ; then 
 		echo "No domain name specified"
 		exit
 	fi
-	echo "would you like to use certbot's staging environment ?"
-	echo "https://letsencrypt.org/docs/staging-environment/"
 	if test -z "$staging" ; then
+		echo "would you like to use certbot's staging environment ?"
+		echo "https://letsencrypt.org/docs/staging-environment/"
 		echo "Use certbot stagin ? N/y: "
-		read -r staging
+		read -r staging <&1
 	fi
 	if [[ $(echo "$staging" | tr '[:upper:]' '[:lower:]') = y* ]] ; then
 		echo "Using staging"
@@ -129,12 +129,11 @@ lines
 echo "Preparations have been made correctly. To be able to get the ssl_certificate please forward the port 8080 on LAN to port 80 on WAN, And While you're at it, consider forwarding port 8443 on LAN to port 443 on WAN since you will need it later."
 echo "You can find this in your router settings"
 echo -n "After doing so, press enter to continue."
+read -r <&1
 lines
-sleep 3
-read -r
-certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 $stage_flag -v --nginx -d $domain_name
+certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 $stage_flag -v --nginx -d $domain_name <&1
 
-if grep -q ssl_certificate "$PREFIX/etc/nginx/sites-available/matrix" ; then
+if ! grep -q ssl_certificate "$PREFIX/etc/nginx/sites-available/matrix" ; then
 	echo "Seems like certbot worked but didn't change your config file. Please visit the following link"
 	echo "https://github.com/medanisjbara/synapse-termux/blob/main/GUIDE.md#certbot-didnt-setup-the-config"
 fi
