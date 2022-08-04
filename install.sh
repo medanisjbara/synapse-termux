@@ -20,8 +20,8 @@ if [ -z "$domain_name" ]; then
 	fi
 	echo "would you like to use certbot's staging environment ?"
 	echo "https://letsencrypt.org/docs/staging-environment/"
-	echo "Use certbot stagin ? N/y: " 
 	if test -z "$staging" ; then
+		echo "Use certbot stagin ? N/y: "
 		read -r staging
 	fi
 	if [[ $(echo "$staging" | tr '[:upper:]' '[:lower:]') = y* ]] ; then
@@ -137,7 +137,7 @@ echo "Preparations have been made correctly. To be able to get the ssl_certifica
 echo "You can find this in your router settings"
 echo -n "After doing so, press enter to continue."
 read -r; lines
-eval "certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 $stage_flag -v --nginx -d $domain_name"
+certbot --work-dir $PREFIX/var/lib/letsencrypt --logs-dir $PREFIX/var/log/letsencrypt --config-dir $PREFIX/etc/letsencrypt --nginx-server-root $PREFIX/etc/nginx --http-01-port 8080 --https-port 8443 $stage_flag -v --nginx -d $domain_name
 
 if grep -q ssl_certificate "$PREFIX/etc/nginx/sites-available/matrix" ; then
 	echo "Seems like certbot worked but didn't change your config file. Please visit the following link"
