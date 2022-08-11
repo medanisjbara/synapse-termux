@@ -2,6 +2,8 @@
 A script and a guide on how to host matrix using synapse and nginx on termux.  
 You can choose to follow along the [GUIDE.md](/GUIDE.md), or to just curl the script to bash and execute it to automatically have what you need.
 
+For steps on how to do this using dendrite instead of synapse (recommended for better performance), check out [starchturrets/dendrite-termux-experiment](https://github.com/starchturrets/dendrite-termux-experiment/)
+
 ## Pre-requisites
 * A phone (preferably broken to repurpose it to be your home server)
 * And internet connection
