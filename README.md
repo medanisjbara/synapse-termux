@@ -19,6 +19,7 @@ Well, this is an experiment, being done for educational purposes. But when you r
 The guide does exactly the same as the script does, But with some explanation to why everything is the way it is. Both the script and the guide were just an improvised way of copying the instruction from the official sources and trying to bend them to the rough android environment (same as everything else under termux).  
 
 **If you intend to really use this as your matrix server Please consider the following**
+* Please check the documentation on [running synapse on single board computers](https://github.com/matrix-org/synapse/blob/develop/docs/other/running_synapse_on_single_board_computers.md)
 * This is completely experimental. I can't be held responsible for any data loss to your precious messages (all the programs used do not have warranty as well so. You're on your own mate.
 * Consider disabling apps that you're not using. You can use `adb` to do this, just make sure to enable them if you ever have to reboot your phone, This will help you obtain more resources for your server.
 ```shell
