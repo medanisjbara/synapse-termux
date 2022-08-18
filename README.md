@@ -2,6 +2,8 @@
 A script and a guide on how to host matrix using synapse and nginx on termux.  
 You can choose to follow along the [GUIDE.md](/GUIDE.md), or to just curl the script to bash and execute it to automatically have what you need.
 
+This repo was chosen as the [dept of guides in This Week In Matrix](https://matrix.org/blog/2022/08/05/this-week-in-matrix-2022-08-05/#dept-of-guides-%F0%9F%A7%AD) on the 5th of Auguest 2022.
+
 For steps on how to do this using dendrite instead of synapse (recommended for better performance), check out [starchturrets/dendrite-termux-experiment](https://github.com/starchturrets/dendrite-termux-experiment/)
 
 ## Pre-requisites
