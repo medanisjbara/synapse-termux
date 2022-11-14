@@ -37,6 +37,19 @@ yes | pkg update -y
 pkg innstall -y build-essential binutils python rust libffi sqlite openssl  libjpeg-turbo
 pip install virtualenv
 
+# Configuring cargo, see https://github.com/termux/termux-packages/issues/12260
+mkdir ~/.cargo
+cat << EOF > ~/.cargo/config.toml
+[profile.dev]
+lto = false
+[profile.release]
+lto = false
+[profile.test]
+lto  =false
+[profile.bench]
+lto = false
+EOF
+
 # Required for rust to build python cryptography package
 CARGO_BUILD_TARGET="$(rustc --print target-list | grep android | grep "$(uname -m | cut -d7 -f1)" )"
 export CARGO_BUILD_TARGET
