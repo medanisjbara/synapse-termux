@@ -4,7 +4,7 @@ set -e
 
 domain_name="$1"
 staging="$2"
-size="$(stty -a </dev/pts/0 | grep -Po '(?<=columns )\d+')"
+size="$(stty -a < "$(tty)" | grep -Po '(?<=columns )\d+')"
 
 lines(){
 	eval "printf -- '-%.0s' {1..$size}"
